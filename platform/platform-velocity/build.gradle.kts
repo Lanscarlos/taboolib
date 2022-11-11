@@ -1,3 +1,4 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
 repositories {
     maven { url = uri("https://repo.papermc.io/repository/maven-public/") }
 }
@@ -9,7 +10,7 @@ dependencies {
 }
 
 tasks {
-    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    withType<ShadowJar> {
         archiveClassifier.set("")
         relocate("org.tabooproject", "taboolib.library")
     }

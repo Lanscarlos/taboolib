@@ -1,5 +1,7 @@
+import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+
 dependencies {
-    implementation("org.yaml:snakeyaml:1.28")
+    compileOnly("org.yaml:snakeyaml:1.28")
     compileOnly(project(":common"))
     compileOnly(project(":common-5"))
     compileOnly(project(":module:module-chat"))
@@ -8,12 +10,12 @@ dependencies {
 }
 
 tasks {
-    withType<com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar> {
+    withType<ShadowJar> {
         archiveClassifier.set("")
-        archiveBaseName.set("${archiveBaseName.get()}-shaded")
-        dependencies {
-            include(dependency("org.yaml:snakeyaml:1.28"))
-        }
+//        archiveBaseName.set("${archiveBaseName.get()}-shaded")
+//        dependencies {
+//            include(dependency("org.yaml:snakeyaml:1.28"))
+//        }
         relocate("org.tabooproject", "taboolib.library")
     }
     build {

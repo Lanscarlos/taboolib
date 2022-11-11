@@ -7,6 +7,7 @@ import org.bukkit.inventory.ItemStack
 import taboolib.common.Isolated
 import taboolib.module.ui.ClickEvent
 import taboolib.module.ui.ClickType
+import taboolib.platform.util.isAir
 import taboolib.platform.util.isNotAir
 
 @Isolated
@@ -86,7 +87,9 @@ open class Stored(title: String) : Basic(title) {
                     it.isCancelled = true
                     // 获取有效位置
                     val firstSlot = rule.firstSlot(it.inventory, currentItem!!)
-                    if (firstSlot >= 0) {
+                    // 目标位置不存在任何物品
+                    // 防止覆盖物品
+                    if (firstSlot >= 0 && rule.readItem(it.inventory, firstSlot).isAir) {
                         // 设置物品
                         rule.writeItem(it.inventory, currentItem, firstSlot)
                         // 移除物品
@@ -125,7 +128,7 @@ open class Stored(title: String) : Basic(title) {
     open class Rule {
 
         /** 检查判定位置回调 **/
-        internal var checkSlot: ((inventory: Inventory, itemStack: ItemStack, slot: Int) -> Boolean) = { _, _, _ -> false }
+        internal var checkSlot: ((inventory: Inventory, itemStack: ItemStack, slot: Int) -> Boolean) = { _, _, _ -> true }
 
         /** 获取可用位置回调 **/
         internal var firstSlot: ((inventory: Inventory, itemStack: ItemStack) -> Int) = { _, _ -> -1 }
@@ -163,8 +166,9 @@ open class Stored(title: String) : Basic(title) {
          * 定义判定位置
          * 玩家是否可以将物品放入
          */
-        open fun checkSlot(checkSlot: (inventory: Inventory, itemStack: ItemStack, slot: Int) -> Boolean) {
-            this.checkSlot = checkSlot
+        open fun checkSlot(callback: (inventory: Inventory, itemStack: ItemStack, slot: Int) -> Boolean) {
+            val before = checkSlot
+            checkSlot = { inventory, itemStack, slot -> callback(inventory, itemStack, slot) && before(inventory, itemStack, slot) }
         }
 
         /**

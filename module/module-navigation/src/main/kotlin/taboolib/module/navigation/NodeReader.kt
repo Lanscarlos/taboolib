@@ -3,6 +3,7 @@ package taboolib.module.navigation
 import org.bukkit.util.NumberConversions
 import org.bukkit.util.Vector
 import taboolib.module.navigation.Fluid.Companion.getFluid
+import kotlin.math.abs
 
 /**
  * Navigation
@@ -237,7 +238,12 @@ open class NodeReader(val entity: NodeEntity) {
      * 临近合法
      */
     open fun isNeighborValid(neighbor: Node?, node: Node): Boolean {
-        return neighbor != null && !neighbor.closed && (neighbor.costMalus >= 0.0f || node.costMalus < 0.0f)
+        if (neighbor != null && !neighbor.closed && (neighbor.costMalus >= 0.0f || node.costMalus < 0.0f)) {
+            val blockHeight = NMS.INSTANCE.getBlockHeight(node.asBlockPos().down().toBlock(world)) + node.y - 1
+            val neighborHeight = NMS.INSTANCE.getBlockHeight(neighbor.asBlockPos().down().toBlock(world)) + neighbor.y - 1
+            return abs(blockHeight - neighborHeight) < 1.25
+        }
+        return false
     }
 
     /**
@@ -266,7 +272,7 @@ open class NodeReader(val entity: NodeEntity) {
 
     open fun getNeighbors(nodes: Array<Node?>, node: Node): Int {
         var neighbors = 0
-        var j = 0
+//        var j = 0
 //        val pathType0 = getCachedBlockType(node.x, node.y + 1, node.z)
 //        val pathType1 = getCachedBlockType(node.x, node.y, node.z)
 //        if (entity.getPathfindingMalus(pathType0) >= 0.0f && pathType1 != BlockPathTypes.STICKY_HONEY) {

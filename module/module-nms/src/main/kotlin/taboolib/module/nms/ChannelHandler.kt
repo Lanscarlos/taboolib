@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package taboolib.module.nms
 
 import io.netty.channel.ChannelDuplexHandler

@@ -104,11 +104,11 @@ open class Node(val x: Int, val y: Int, val z: Int) {
     }
 
     fun display(world: World) {
-        world.spawnParticle(Particle.VILLAGER_HAPPY, 0.0, 0.0, 0.0, 10, x + 0.5, y + 0.5, z + 0.5)
+        world.spawnParticle(Particle.VILLAGER_HAPPY, x + 0.5, y + 0.5, z + 0.5, 10, 0.0, 0.0, 0.0, 0.0)
     }
 
     fun display(player: Player) {
-        player.spawnParticle(Particle.VILLAGER_HAPPY, 0.0, 0.0, 0.0, 10, x + 0.5, y + 0.5, z + 0.5)
+        player.spawnParticle(Particle.VILLAGER_HAPPY, x + 0.5, y + 0.5, z + 0.5, 10, 0.0, 0.0, 0.0, 0.0)
     }
 
     override fun equals(other: Any?): Boolean {
@@ -130,7 +130,7 @@ open class Node(val x: Int, val y: Int, val z: Int) {
     companion object {
 
         fun createHash(x: Int, y: Int, z: Int): Int {
-            return y and 255 or (x and 32767 shl 8) or (z and 32767 shl 24) or (if (x < 0) -2147483648 else 0) or (if (z < 0) '耀'.toInt() else 0)
+            return y and 255 or (x and 32767 shl 8) or (z and 32767 shl 24) or (if (x < 0) -2147483648 else 0) or (if (z < 0) '耀'.code else 0)
         }
     }
 }
